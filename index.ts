@@ -93,14 +93,15 @@ class UserManageDetailHandler extends UserManageHandler {
     
     @param('uid', Types.Int)
     @param('operation', Types.String)
-    async post(domainId: string, uid: number, operation: string) {
+    @param('password', Types.String)
+    async post(domainId: string, uid: number, operation: string, password: string) {
         const udoc = await UserModel.getById(domainId, uid);
         if (!udoc) throw new UserNotFoundError(uid);
-        
+
         if (operation === 'edit') {
             await this.postEdit(domainId, uid);
         } else if (operation === 'resetPassword') {
-            await this.postResetPassword(domainId, uid);
+            await this.postResetPassword(domainId, uid, password);
         } else if (operation === 'setPriv') {
             await this.postSetPriv(domainId, uid);
         } else if (operation === 'ban') {
@@ -108,7 +109,7 @@ class UserManageDetailHandler extends UserManageHandler {
         } else if (operation === 'unban') {
             await this.postUnban(domainId, uid);
         }
-        
+
         this.back();
     }
     
